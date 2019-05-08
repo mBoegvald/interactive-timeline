@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://fonts.googleapis.com/css?family=PT+Sans"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: "PT Sans", sans-serif;
+      }
+      #svg {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      #timelineDiv {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .container {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 40%;
+        left: 50%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 30%;
+        color: #004c54;
+      }
+      .left {
+        text-align: center;
+        font-size: 1.3em;
+      }
+      .left img {
+        width: 100%;
+        border-radius: 11px;
+      }
+      .right {
+        position: relative;
+        margin-left: 20px;
+        font-size: 1.2em;
+      }
+      .content {
+        position: absolute;
+        bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="svg">
+      <div id="playerDiv"></div>
+      <div id="timelineDiv"></div>
+    </div>
+
+    <template class="playerTemplate">
+      <div class="container">
+        <div class="left">
+          <h1></h1>
+          <img src="" alt="" />
+        </div>
+        <div class="right">
+          <div class="content">
+            <h2 class="position"></h2>
+            <h2 class="pick"></h2>
+          </div>
+        </div>
+      </div>
+    </template>
+    <script>
+      window.addEventListener("DOMContentLoaded", loadSVG);
+      window.addEventListener("DOMContentLoaded", loadJSON);
+
+      function loadSVG() {
+        console.log("Load the SVG");
+        fetch("background-01.svg")
+          .then(response => response.text())
+          .then(svgdata => {
+            console.log("The SVG is loaded!");
+
+            document
+              .querySelector("#svg")
+              .insertAdjacentHTML("afterbegin", svgdata);
+          });
+
+        console.log("Load the SVG");
+        fetch("timeline-2-01.svg")
+          .then(response => response.text())
+          .then(svgdata => {
+            console.log("The SVG is loaded!");
+
+            document
+              .querySelector("#timelineDiv")
+              .insertAdjacentHTML("afterbegin", svgdata);
+          });
+      }
+
+      function loadJSON() {
+        fetch("data.json")
+          .then(data => data.json())
+          .then(jsonData => {
+            document
+              .querySelector("#left-arrow")
+              .addEventListener("click", () => {
+                console.log("1");
+              });
+            buttons = document.querySelectorAll("#timeline .year-container");
+            for (let i = 0; i < buttons.length; i++) {
+              let self = buttons[i];
+              self.addEventListener("click", function(event) {
+                jsonData.forEach(player => {
+                  let temp = document.querySelector(".playerTemplate");
+                  let dest = document.querySelector("#playerDiv");
+                  let klon = temp.cloneNode(true).content;
+                  event.preventDefault();
+                  let circleSelector = "#year-" + player.year + " > circle";
+                  document.querySelector(circleSelector).style.fill = "none";
+                  if (player.year == event.target.textContent) {
+                    dest.textContent = "";
+
+                    klon.querySelector("h1").textContent = player.name;
+                    klon.querySelector("img").src = "pics/" + player.image;
+                    klon.querySelector(".position").textContent =
+                      player.position;
+                    klon.querySelector(".pick").textContent =
+                      "Overall pick: " + "#" + player.pick;
+                    dest.appendChild(klon);
+                    document.querySelector(circleSelector).style.fill =
+                      "#004c54";
+                  }
+                });
+              });
+            }
+          });
+      }
+    </script>
+  </body>
+</html>
