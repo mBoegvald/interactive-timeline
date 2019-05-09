@@ -17,14 +17,17 @@
       }
       #svg {
         width: 100%;
-        height: 100%;
         position: relative;
+        overflow: hidden;
       }
 
       #timelineDiv {
         position: absolute;
         top: 0;
         left: 0;
+        width: 300vw;
+        transition: 1s;
+        transform: translateX(-100vw);
       }
 
       .container {
@@ -39,7 +42,7 @@
       }
       .left {
         text-align: center;
-        font-size: 1.3em;
+        font-size: 1.1vw;
       }
       .left img {
         width: 100%;
@@ -48,11 +51,19 @@
       .right {
         position: relative;
         margin-left: 20px;
-        font-size: 1.2em;
+        font-size: 1.1vw;
       }
       .content {
         position: absolute;
         bottom: 0;
+      }
+
+      .year-container {
+        z-index: 10;
+      }
+
+      .year-container {
+        cursor: pointer;
       }
     </style>
   </head>
@@ -108,12 +119,32 @@
         fetch("data.json")
           .then(data => data.json())
           .then(jsonData => {
-            document
-              .querySelector("#left-arrow")
-              .addEventListener("click", () => {
-                console.log("1");
-              });
             buttons = document.querySelectorAll("#timeline .year-container");
+            document
+              .querySelector("#click-right-1")
+              .addEventListener("click", () => {
+                document.querySelector("#timelineDiv").style.transform =
+                  "translateX(-100vw)";
+              });
+            document
+              .querySelector("#click-right-2")
+              .addEventListener("click", () => {
+                document.querySelector("#timelineDiv").style.transform =
+                  "translateX(-200vw)";
+              });
+            document
+              .querySelector("#click-left-2")
+              .addEventListener("click", () => {
+                document.querySelector("#timelineDiv").style.transform =
+                  "translateX(0vw)";
+              });
+            document
+              .querySelector("#click-left-3")
+              .addEventListener("click", () => {
+                document.querySelector("#timelineDiv").style.transform =
+                  "translateX(-100vw)";
+              });
+
             for (let i = 0; i < buttons.length; i++) {
               let self = buttons[i];
               self.addEventListener("click", function(event) {
